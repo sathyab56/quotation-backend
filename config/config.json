@@ -1,0 +1,15 @@
+{
+  "development": {
+    "username": "quotation_user",
+    "password": "FafrSN1zEuyh5fWT6SYGK8ZsyrkvIgn2",
+    "database": "quotation_s2sj",
+    "host": "dpg-d0gq9bq4d50c7383miq0-a.oregon-postgres.render.com",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}
