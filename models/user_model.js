@@ -1,29 +1,38 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../configs/db.js";
+import bcrypt from "bcryptjs"; // Ensure to install bcryptjs
 
-export const Users = sequelize.define('users', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
+export const Users = sequelize.define("Users", {
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true, // Ensures email format
     },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true
-        }
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    processingData: {
-        type: DataTypes.JSONB,
-        allowNull:true
-    }
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  processingData: {
+    type: DataTypes.JSON, 
+    allowNull: true,
+  },
 }, {
-    tableName: "user_credentials",
-    timestamps: true
+  hooks: {
+    beforeCreate: async (user) => {
+      if (user.password) {
+        // Hash password before saving to database
+        user.password = await bcrypt.hash(user.password, 10);
+      }
+    },
+    beforeUpdate: async (user) => {
+      if (user.password) {
+        // Hash password before updating it in database
+        user.password = await bcrypt.hash(user.password, 10);
+      }
+    },
+  },
 });
+

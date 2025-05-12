@@ -1,111 +1,113 @@
 import { Users } from "../models/user_model.js";
 import bcrypt from "bcryptjs";
 
-
+// POST /signup
 export const signup = async (req, res) => {
-    console.log("inside signup")
+    console.log("Inside signup controller");
+
     try {
-        const { email, password } = req?.body;
-        console.log("email", email);
-        console.log("password", password);
-        if (! email|| !password ) {
-            return res.status(400).json({
-                "message": "Email and password are required fields"
-            })
-        };
-        const exisitngUser = await Users.findOne({ where:{ email:email } })
-        if (exisitngUser) {
-            return res.status(400).json({
-                "message":"Email is already registered"
-            })
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required." });
         }
+
+        const existingUser = await Users.findOne({ where: { email } });
+
+        if (existingUser) {
+            return res.status(400).json({ message: "Email is already registered." });
+        }
+
         const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt);
-        // console.log("Print Hashed password", hash);
-      
-        const result = await Users.create({ "email": email, "password": hash })
-        console.log(result)
-        res.status(201).json({
-            message: "User created successfully",
-            user: result
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = await Users.create({
+            email,
+            password: hashedPassword,
+        });
+
+        console.log("User created:", newUser.email);
+
+        return res.status(201).json({
+            message: "User registered successfully.",
+            user: {
+                id: newUser.id,
+                email: newUser.email,
+            }
         });
     } catch (error) {
-        console.log(error)
-        res.status(400).json({
-            "message": `An error occured ${error}`,
-        })
+        console.error("Signup error:", error.message, error.stack);
+        return res.status(500).json({ message: "Internal server error." });
     }
-}
+};
 
+// POST /signin
 export const signin = async (req, res) => {
+    console.log("Inside signin controller");
+
     try {
-        console.log("inside signin")
         const { email, password } = req.body;
-        console.log("email", email);
-        console.log("password", password);
+
         if (!email || !password) {
-            return res.status(400).json({
-                "message": "Email and password are required fields"
-            })
-        };
-
-        const data = await Users.findOne({ where: { email: email.trim() } })
-        if (!data) {
-            return res.status(404).json({
-                "message": "User not found"
-            });
-        }
-        console.log(data);
-        const savedPassword = data.dataValues.password
-        console.log(savedPassword)
-        const result = await bcrypt.compare(password, savedPassword)
-        console.log("The result is",result)
-        if (!result) {
-            return res.status(403).json({
-                "error": "Invalid email or password"
-            })
-        } else {
-            return res.status(200).json({
-                "message": "Login successful",
-                "details":data
-            });
-        }
-    } catch (error) {
-        res.status(500).json({ "error": "Internal server error" }
-        )
-    }
-}
-
-export const saveData = async (req, res) => {
-    try {
-        const { email, processingData } = req.body;
-
-        if (!email || !processingData) {
-            return res.status(400).json({
-                message: "Email and processingData are required",
-            });
+            return res.status(400).json({ message: "Email and password are required." });
         }
 
         const user = await Users.findOne({ where: { email } });
 
         if (!user) {
-            return res.status(404).json({
-                message: "User not found",
-            });
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return res.status(403).json({ message: "Invalid email or password." });
+        }
+
+        return res.status(200).json({
+            message: "Login successful.",
+            user: {
+                id: user.id,
+                email: user.email,
+                processingData: user.processingData || null
+            }
+        });
+    } catch (error) {
+        console.error("Signin error:", error.message, error.stack);
+        return res.status(500).json({ message: "Internal server error." });
+    }
+};
+
+// POST /savedata
+export const saveData = async (req, res) => {
+    console.log("Inside saveData controller");
+
+    try {
+        const { email, processingData } = req.body;
+
+        if (!email || !processingData) {
+            return res.status(400).json({ message: "Email and processingData are required." });
+        }
+
+        const user = await Users.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
         }
 
         user.processingData = processingData;
         await user.save();
 
         return res.status(200).json({
-            message: "Processing data updated successfully",
-            user,
+            message: "Processing data saved successfully.",
+            user: {
+                id: user.id,
+                email: user.email,
+                processingData: user.processingData
+            }
         });
     } catch (error) {
-        console.error("Error updating processing data:", error);
-        return res.status(500).json({
-            message: "Internal server error",
-            error: error.message,
-        });
+        console.error("SaveData error:", error.message, error.stack);
+        return res.status(500).json({ message: "Internal server error." });
     }
 };
