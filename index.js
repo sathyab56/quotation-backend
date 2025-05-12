@@ -8,10 +8,21 @@ import { sequelize } from "./configs/db.js";
 
 const app = express();
 
-app.use(cors());
+// ✅ Allow CORS from Vercel Frontend and Localhost
+const allowedOrigins = [
+    "https://quotation-frontend-mocha.vercel.app",  // Vercel URL
+    "http://localhost:8000"                         // Local development (if applicable)
+];
+
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true,  // Allow credentials (cookies/auth tokens)
+}));
+
 app.use(bodyParser.json());
 
 console.log("The app is running");
+
 app.use("/", defaultrouter);
 
 app.use((req, res) => {
