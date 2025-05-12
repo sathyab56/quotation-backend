@@ -1,17 +1,14 @@
-import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
+import { Sequelize } from "sequelize";
+import { configs } from "./env.js";
 
-// Load environment variables from .env file
-dotenv.config();
-
-// Create Sequelize instance
-const sequelize = new Sequelize({
-  host: process.env.DB_HOST,                // Database host (127.0.0.1 for local)
-  port: parseInt(process.env.DB_PORT),      // Convert DB_PORT to integer
-  dialect: 'postgres',                     // PostgreSQL database
-  username: process.env.DB_USER,           // Database user
-  password: process.env.DB_PASSWORD,       // Database password
-  database: process.env.DB_NAME,           // Database name
-});
-
-export { sequelize };
+export const sequelize = new Sequelize(
+  configs.db_name,
+  configs.db_user,
+  configs.db_password,
+  {
+    host: configs.db_host,
+    dialect: "postgres",
+    port: configs.db_port,
+    logging: false,
+  }
+);
