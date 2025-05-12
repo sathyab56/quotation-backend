@@ -36,7 +36,8 @@ export const signup = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Signup error:", error.message, error.stack);
+        console.error("Signup error:", error.message);
+        console.error(error.stack);  // Logs the full error stack
         return res.status(500).json({ message: "Internal server error." });
     }
 };
@@ -73,7 +74,8 @@ export const signin = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Signin error:", error.message, error.stack);
+        console.error("Signin error:", error.message);
+        console.error(error.stack);  // Logs the full error stack
         return res.status(500).json({ message: "Internal server error." });
     }
 };
@@ -107,7 +109,8 @@ export const saveData = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("SaveData error:", error.message, error.stack);
+        console.error("SaveData error:", error.message);
+        console.error(error.stack);  // Logs the full error stack
         return res.status(500).json({ message: "Internal server error." });
     }
 };
