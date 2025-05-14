@@ -1,5 +1,5 @@
+import bcrypt from 'bcryptjs';
 import { Users } from "../models/user_model.js";
-import bcrypt from "bcryptjs";
 
 // POST /signup
 export const signup = async (req, res) => {
@@ -18,7 +18,11 @@ export const signup = async (req, res) => {
             return res.status(400).json({ message: "Email is already registered." });
         }
 
-        const newUser = await Users.create({ email, password }); // ✅ LET Sequelize hash
+        // Hash the password before saving it
+        const hashedPassword = await bcrypt.hash(password, 10);  // 10 is the salt rounds
+
+        // Save the user with the hashed password
+        const newUser = await Users.create({ email, password: hashedPassword });
 
         console.log("User created:", newUser.email);
 
@@ -34,6 +38,7 @@ export const signup = async (req, res) => {
         return res.status(500).json({ message: "Internal server error." });
     }
 };
+
 
 
 // POST /signin
