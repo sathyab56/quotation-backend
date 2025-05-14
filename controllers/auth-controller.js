@@ -62,7 +62,8 @@ export const signin = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return res.status(403).json({ message: "Invalid email or password." });
+           return res.status(401).json({ message: "Invalid credentials" });
+
         }
 
         return res.status(200).json({
