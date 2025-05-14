@@ -4,6 +4,8 @@ import cors from "cors";
 import { configs } from "./configs/env.js";
 import defaultrouter from "./routes/routes.js";
 import { sequelize } from "./configs/db.js";
+import productRouter from "./routes/product.js";
+
 
 const app = express();
 
@@ -31,7 +33,10 @@ app.use(cors({
 app.use(express.json());
 
 // ✅ Route setup
+// ✅ Route setup
 app.use("/", defaultrouter);
+app.use("/products", productRouter); // ✅ Now this route exists!
+
 
 // ✅ 404 route
 app.use((req, res) => {
