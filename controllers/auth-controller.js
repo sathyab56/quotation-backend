@@ -18,11 +18,8 @@ export const signup = async (req, res) => {
             return res.status(400).json({ message: "Email is already registered." });
         }
 
-        // Hash the password before saving it
-        const hashedPassword = await bcrypt.hash(password, 10);  // 10 is the salt rounds
-
-        // Save the user with the hashed password
-        const newUser = await Users.create({ email, password: hashedPassword });
+        // Don't hash password here! Let the model's beforeCreate hook do it
+        const newUser = await Users.create({ email, password });
 
         console.log("User created:", newUser.email);
 
@@ -41,13 +38,16 @@ export const signup = async (req, res) => {
 
 
 
+
 // POST /signin
 export const signin = async (req, res) => {
     console.log("Inside signin controller");
 
     try {
         const { email, password } = req.body;
-        console.log("Received login credentials:", { email, password });
+        console.log("Stored hash:", user.password);
+        console.log("Entered plain password:", password);
+
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required." });

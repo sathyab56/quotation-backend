@@ -28,11 +28,11 @@ export const Users = sequelize.define("Users", {
       }
     },
     beforeUpdate: async (user) => {
-      if (user.password) {
-        // Hash password before updating it in database
-        user.password = await bcrypt.hash(user.password, 10);
-      }
-    },
+  if (user.changed('password')) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
+},
+
   },
 });
 
