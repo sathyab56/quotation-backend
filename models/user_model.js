@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../configs/db.js";
-import bcrypt from "bcryptjs"; // Ensure to install bcryptjs
+import bcrypt from "bcryptjs";
 
 export const Users = sequelize.define("Users", {
   email: {
@@ -8,7 +8,7 @@ export const Users = sequelize.define("Users", {
     allowNull: false,
     unique: true,
     validate: {
-      isEmail: true, // Ensures email format
+      isEmail: true,
     },
   },
   password: {
@@ -16,23 +16,20 @@ export const Users = sequelize.define("Users", {
     allowNull: false,
   },
   processingData: {
-    type: DataTypes.JSON, 
+    type: DataTypes.JSON,
     allowNull: true,
   },
 }, {
   hooks: {
     beforeCreate: async (user) => {
       if (user.password) {
-        // Hash password before saving to database
         user.password = await bcrypt.hash(user.password, 10);
       }
     },
     beforeUpdate: async (user) => {
-  if (user.changed('password')) {
-    user.password = await bcrypt.hash(user.password, 10);
-  }
-},
-
+      if (user.changed('password')) {
+        user.password = await bcrypt.hash(user.password, 10);
+      }
+    },
   },
 });
-
