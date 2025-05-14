@@ -44,6 +44,8 @@ export const signup = async (req, res) => {
 // POST /signin
 export const signin = async (req, res) => {
     console.log("Inside signin controller");
+    console.log("Received login credentials:", { email, password });
+
 
     try {
         const { email, password } = req.body;
