@@ -44,11 +44,10 @@ export const signup = async (req, res) => {
 // POST /signin
 export const signin = async (req, res) => {
     console.log("Inside signin controller");
-    console.log("Received login credentials:", { email, password });
-
 
     try {
         const { email, password } = req.body;
+        console.log("Received login credentials:", { email, password });
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required." });
@@ -64,7 +63,6 @@ export const signin = async (req, res) => {
 
         if (!isMatch) {
            return res.status(401).json({ message: "Invalid credentials" });
-
         }
 
         return res.status(200).json({
@@ -81,6 +79,7 @@ export const signin = async (req, res) => {
         return res.status(500).json({ message: "Internal server error." });
     }
 };
+
 
 // POST /savedata
 export const saveData = async (req, res) => {
