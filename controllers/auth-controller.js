@@ -18,13 +18,7 @@ export const signup = async (req, res) => {
             return res.status(400).json({ message: "Email is already registered." });
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        const newUser = await Users.create({
-            email,
-            password: hashedPassword,
-        });
+        const newUser = await Users.create({ email, password }); // ✅ LET Sequelize hash
 
         console.log("User created:", newUser.email);
 
@@ -37,10 +31,10 @@ export const signup = async (req, res) => {
         });
     } catch (error) {
         console.error("Signup error:", error.message);
-        console.error(error.stack);  // Logs the full error stack
         return res.status(500).json({ message: "Internal server error." });
     }
 };
+
 
 // POST /signin
 export const signin = async (req, res) => {
