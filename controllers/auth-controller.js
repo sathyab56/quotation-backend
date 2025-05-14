@@ -45,9 +45,6 @@ export const signin = async (req, res) => {
 
     try {
         const { email, password } = req.body;
-        console.log("Stored hash:", user.password);
-        console.log("Entered plain password:", password);
-
 
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required." });
@@ -58,6 +55,10 @@ export const signin = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
+
+        // ✅ Log only after user is retrieved
+        console.log("Stored hash:", user.password);
+        console.log("Entered plain password:", password);
 
         const isMatch = await bcrypt.compare(password, user.password);
 
@@ -75,10 +76,11 @@ export const signin = async (req, res) => {
         });
     } catch (error) {
         console.error("Signin error:", error.message);
-        console.error(error.stack);  // Logs the full error stack
+        console.error(error.stack);
         return res.status(500).json({ message: "Internal server error." });
     }
 };
+
 
 
 // POST /savedata
