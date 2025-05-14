@@ -1,43 +1,53 @@
-'use strict';
+import express from "express";
+import "dotenv/config";
+import cors from "cors";
+import { configs } from "./configs/env.js";
+import defaultrouter from "./routes/routes.js";
+import { sequelize } from "./configs/db.js";
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
+const app = express();
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+// ✅ Allowed origins
+const allowedOrigins = [
+  "https://quotation-frontend-mocha.vercel.app",
+  "http://localhost:8000",
+  "http://localhost:3000"
+];
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+// ✅ CORS setup
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`❌ CORS blocked request from: ${origin}`);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+// ✅ JSON parser (modern)
+app.use(express.json());
+
+// ✅ Route setup
+app.use("/", defaultrouter);
+
+// ✅ 404 route
+app.use((req, res) => {
+  res.status(404).json({ error: "Resource not found" });
+});
+
+// ✅ Server start
+const port = configs.port || process.env.PORT || 3000;
+app.listen(port, async () => {
+  console.log(`✅ Server is running on port: ${port}`);
+  try {
+    await sequelize.authenticate();
+    console.log("✅ Database connection established successfully.");
+  } catch (error) {
+    console.error("❌ DB connection error:", error.message);
   }
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
-
-module.exports = db;
+export default app;

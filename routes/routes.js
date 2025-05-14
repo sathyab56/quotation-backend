@@ -1,15 +1,18 @@
+// routes.js
 import { Router } from "express";
 import { checkHealth } from "../controllers/common-controller.js";
 import { saveData, signin, signup } from "../controllers/auth-controller.js";
 
+const router = Router();
 
-export const defaultrouter = Router();
+// Health check route
+router.get("/health", checkHealth);
 
+// Auth routes
+router.post("/signup", signup);
+router.post("/signin", signin);
 
-defaultrouter.get("/health", checkHealth);
-defaultrouter.post("/signup", signup);
-defaultrouter.post("/signin", signin);
-defaultrouter.post("/savedata", saveData);
+// Save data route
+router.post("/savedata", saveData);
 
-
-export default defaultrouter
+export default router;
