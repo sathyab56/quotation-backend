@@ -3,6 +3,7 @@ import "dotenv/config";
 import cors from "cors";
 import { configs } from "./configs/env.js";
 import defaultrouter from "./routes/routes.js";
+import productRouter from "./routes/product.js"; // <-- Import product routes
 import { sequelize } from "./configs/db.js";
 
 const app = express();
@@ -31,6 +32,7 @@ app.use(cors({
 app.use(express.json());
 
 // ✅ Route setup
+app.use("/api/products", productRouter); // <-- Mount product routes here
 app.use("/", defaultrouter);
 
 // ✅ 404 route
