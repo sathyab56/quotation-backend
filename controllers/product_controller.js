@@ -1,9 +1,8 @@
-import { Product } from '../models/index.js'; // adjust import path
-import { Product } from "../models/product.js";  // Adjust if your model file path/name differs
+import { Product } from "../model/product_model.js"; // ✅ Correct path
 
 export const addProduct = async (req, res) => {
   try {
-    const newProduct = await Product.create(req.body); // creates a new product in DB
+    const newProduct = await Product.create(req.body); // ✅ stores in DB
     res.status(201).json({ message: "Product added", product: newProduct });
   } catch (error) {
     console.error("Error adding product:", error);
@@ -37,7 +36,7 @@ export const updateProduct = async (req, res) => {
     if (updatedProduct) {
       res.json(updatedProduct);
     } else {
-      res.status(404).json({ error: 'Product not found' });
+      res.status(404).json({ error: "Product not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -51,7 +50,7 @@ export const deleteProduct = async (req, res) => {
     if (deletedCount) {
       res.status(204).send();
     } else {
-      res.status(404).json({ error: 'Product not found' });
+      res.status(404).json({ error: "Product not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
