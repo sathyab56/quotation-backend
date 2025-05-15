@@ -33,7 +33,7 @@ app.use(cors({
 app.use(express.json());
 
 // ✅ Route setup
-app.use("/api/products", productRouter); // <-- Mount product routes here
+app.use("/products", productRouter); // <-- Mount product routes here
 app.use("/", defaultrouter);
 
 // ✅ 404 route
