@@ -8,6 +8,7 @@ import { sequelize } from "./configs/db.js";
 
 const app = express();
 
+
 // ✅ Allowed origins
 const allowedOrigins = [
   "https://quotation-frontend-mocha.vercel.app",
