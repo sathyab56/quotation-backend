@@ -1,14 +1,6 @@
 import { Product } from "../model/product_model.js"; // ✅ Correct path
 
-export const addProduct = async (req, res) => {
-  try {
-    const newProduct = await Product.create(req.body); // ✅ stores in DB
-    res.status(201).json({ message: "Product added", product: newProduct });
-  } catch (error) {
-    console.error("Error adding product:", error);
-    res.status(500).json({ error: "Failed to add product" });
-  }
-};
+
 
 export const getProducts = async (req, res) => {
   try {

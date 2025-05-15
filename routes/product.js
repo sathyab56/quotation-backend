@@ -1,15 +1,12 @@
-// routes/product.js
 import express from 'express';
-import { getProducts, createProduct, updateProduct, deleteProduct } from '../controllers/product-controller.js';
-import { addProduct } from "../controllers/productController.js";
+import { getProducts, createProduct, updateProduct, deleteProduct } from '../controllers/product_controller.js'; // use consistent file
 
 const router = express.Router();
 
-
-router.post("/", addProduct);
-router.get('/', getProducts);        // GET /api/products
-router.post('/', createProduct);     // POST /api/products
-router.put('/:id', updateProduct);   // PUT /api/products/:id
-router.delete('/:id', deleteProduct);// DELETE /api/products/:id
+router.get('/', getProducts);
+router.post('/', createProduct);      // use only this POST handler
+router.put('/:id', updateProduct);
+router.delete('/:id', deleteProduct);
 
 export default router;
+
