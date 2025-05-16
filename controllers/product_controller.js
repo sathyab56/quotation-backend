@@ -1,6 +1,5 @@
-import { Product } from "../model/product_model.js"; // ✅ Correct path
 
-
+import {Product} from '../models/product_model.js';
 
 export const getProducts = async (req, res) => {
   try {

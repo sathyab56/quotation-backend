@@ -12,7 +12,9 @@ const app = express();
 const allowedOrigins = [
   "https://quotation-frontend-mocha.vercel.app", // Vercel frontend
   "http://localhost:8000",                        // Local development
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "http://localhost:5500"
+
 ];
 
 // ✅ Robust CORS setup
@@ -29,6 +31,7 @@ app.use(
     credentials: true, // Allow cookies/auth headers
   })
 );
+// app.use(cors());
 
 // ✅ JSON body parsing
 app.use(bodyParser.json());
