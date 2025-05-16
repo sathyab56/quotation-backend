@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../configs/db.js";
 import bcrypt from "bcryptjs";
 
-export const Users = sequelize.define("users", {
+export const Users = sequelize.define("Users", {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
